@@ -2,13 +2,8 @@
 
 namespace App\Services;
 
-use DomainException;
-use Firebase\JWT\BeforeValidException;
-use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Firebase\JWT\SignatureInvalidException;
-use InvalidArgumentException;
 use UnexpectedValueException;
 
 final class JWTService

@@ -21,3 +21,4 @@ if (
   header('Content-Type: application/json');
   echo json_encode(array('error' => "Nom d'utilisateur ou mot de passe incorrect"));
 }
+  
