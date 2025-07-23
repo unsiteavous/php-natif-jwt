@@ -1,0 +1,66 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  display: flex;
+  background-color: black;
+  color: white;
+  justify-content: space-between;
+  padding: 10px 50px;
+}
+
+header * {
+  color: white;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+main {
+  text-align: center;
+  margin: 15px;
+}
+
+#connect {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 200px;
+  margin: auto;
+}
+
+#dashboard {
+  display: none;
+}
+
+#message {
+  display: flex;
+  flex-direction: column;
+}
+
+#error {
+  display: none;
+  color: red;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#loader {
+  animation: spin 1s linear infinite;
+  transform-origin: 50% 50%; /* centre du SVG */
+}
+
+#connexion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
