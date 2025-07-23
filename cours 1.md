@@ -106,6 +106,8 @@ On va ajouter deux méthodes à ce service :
 
 Cette méthode définie un payload par défaut, qu'elle surcharge avec le payload facultatif qu'on peut passer en paramètre. Cela permet de pouvoir créer facilement des payloads sans se poser de questions, mais de laisser la liberté d'aller un peu plus loin dans des cas précis.
 
+Pour savoir à quoi correspondent chaque élément, voici la documentation précise : https://datatracker.ietf.org/doc/html/rfc7519
+
 ### decode
 
 ```php
