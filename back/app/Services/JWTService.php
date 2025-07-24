@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use DomainException;
+use Error;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use UnexpectedValueException;
@@ -31,9 +33,9 @@ final class JWTService
   public function encode(array $payload = []): string
   {
     $defautPayload = [
-      'iss' => 'http://phpjwt/back/', // site qui émet le JWT
+      'iss' => URL_BACK, // site qui émet le JWT
       'sub' => '', // sujet du JWT, doit être unique (souvent une adresse email)
-      'aud' => 'http://phpjwt/front/', // site qui va utiliser le JWT
+      'aud' => URL_FRONT, // site qui va utiliser le JWT
       'exp' => (new \DateTimeImmutable(datetime: 'now', timezone: new \DateTimeZone('Europe/Paris')))->modify('+' . JWT_LIFETIME . ' second')->getTimestamp(), // date d'expiration
       'iat' => (new \DateTimeImmutable(datetime: 'now', timezone: new \DateTimeZone('Europe/Paris')))->getTimestamp(), // date de création
       'nbf' => (new \DateTimeImmutable(datetime: 'now', timezone: new \DateTimeZone('Europe/Paris')))->getTimestamp(), // date de début de validité (pour différer l'utilisation du token à plus tard)
@@ -49,11 +51,18 @@ final class JWTService
   {
     try {
       return JWT::decode($jwt, new Key($this->publicKey, 'RS256'));
+    } catch (DomainException $e) {
+      return $e->getMessage();
     } catch (UnexpectedValueException $e) {
       // provided JWT is malformed OR
       // provided JWT is missing an algorithm / using an unsupported algorithm OR
       // provided JWT algorithm does not match provided key OR
-      // provided key ID in key/key-array is empty or invalid.
+      // provided key ID in key/key-array is empty or invalid OR
+      // provided JWT is trying to be used after "exp" claim OR
+      // provided JWT is trying to be used before "nbf" claim OR
+      // provided JWT is trying to be used before "iat" claim OR
+      // unknown error thrown in openSSL or libsodium OR
+      // libsodium is required but not available.
       return $e->getMessage();
     }
   }

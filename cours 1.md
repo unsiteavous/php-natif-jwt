@@ -55,14 +55,17 @@ define('JWT_LIFETIME', 60);
 ```
 
 ### Pour créer la clé privée : 
+
+On va avoir besoin de openSSL. Suivre ce [tuto](https://geekchamp.com/how-to-update-openssl-windows-11/). Vous pouvez l'installer avec scoop, chocolatey ou manuellement.
+
 ```bash
-openssl genrsa -out ./config/keys/private.pem 4096
+openssl genrsa -out ./app/config/keys/private.pem 4096
 ```
 Cela crée directement le fichier. Attention, le dossier de destination doit exister avant de lancer la commande.
 
 ### Créer la clé publique :
 ```bash
-openssl rsa -in ./config/keys/private.pem -pubout
+openssl rsa -in ./app/config/keys/private.pem -pubout
 ```
 Cela vous donne dans la console la clé, que vous devez copier et coller dans un fichier, auquel vous donnez une extension `.txt`, `.pub`, ...
 
@@ -111,15 +114,22 @@ Pour savoir à quoi correspondent chaque élément, voici la documentation préc
 ### decode
 
 ```php
-public function decode(string $jwt): object|string
+  public function decode(string $jwt): object|string
   {
     try {
       return JWT::decode($jwt, new Key($this->publicKey, 'RS256'));
+    } catch (DomainException $e) {
+      return $e->getMessage();
     } catch (UnexpectedValueException $e) {
       // provided JWT is malformed OR
       // provided JWT is missing an algorithm / using an unsupported algorithm OR
       // provided JWT algorithm does not match provided key OR
-      // provided key ID in key/key-array is empty or invalid.
+      // provided key ID in key/key-array is empty or invalid OR
+      // provided JWT is trying to be used after "exp" claim OR
+      // provided JWT is trying to be used before "nbf" claim OR
+      // provided JWT is trying to be used before "iat" claim OR
+      // unknown error thrown in openSSL or libsodium OR
+      // libsodium is required but not available.
       return $e->getMessage();
     }
   }

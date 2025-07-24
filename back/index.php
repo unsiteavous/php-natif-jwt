@@ -29,5 +29,5 @@ if (is_string($decoded)) {
 }
 
 echo json_encode([
-    'message' => 'Bonjour User !'
+    'message' => "Bonjour " . $decoded->sub . " !"
 ]);

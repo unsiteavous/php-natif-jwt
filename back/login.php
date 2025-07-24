@@ -7,6 +7,7 @@ $JWTService = JWTService::getInstance();
 
 $data = json_decode(file_get_contents('php://input'), true);
 
+header('Content-Type: application/json');
 if (
   isset($data['username'])
   && isset($data['password'])
@@ -15,10 +16,7 @@ if (
 ) {
   $jwt = $JWTService->encode(['sub' => 'user@example.net']);
 
-  header('Content-Type: application/json');
   echo json_encode(array('token' => $jwt));
 } else {
-  header('Content-Type: application/json');
   echo json_encode(array('error' => "Nom d'utilisateur ou mot de passe incorrect"));
 }
-  
